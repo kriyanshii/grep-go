@@ -69,6 +69,9 @@ func main() {
 // }
 
 func matchLine(line string, pattern string) (bool, error) {
+	if pattern[0] == '^' {
+		return matchPattern(line, pattern[1:], 0), nil
+	}
 	for i := 0; i < len(line); i++ {
 		if matchPattern(line, pattern, i) {
 			return true, nil
