@@ -72,9 +72,6 @@ func matchLine(line string, pattern string) (bool, error) {
 	if pattern[0] == '^' {
 		return matchPattern(line, pattern[1:], 0), nil
 	}
-	if pattern[len(pattern)-1] == '$' {
-		return matchPattern(line, pattern[:len(pattern)-1], 0), nil
-	}
 	for i := 0; i < len(line); i++ {
 		if matchPattern(line, pattern, i) {
 			return true, nil
@@ -84,11 +81,11 @@ func matchLine(line string, pattern string) (bool, error) {
 }
 
 func matchPattern(line string, pattern string, pos int) bool {
-	n := len(pattern)
+	n, m := len(pattern), len(line)
 	j := pos
 	for i := 0; i < n; i++ {
-		if j >= len(line) {
-			return false
+		if j >= m {
+			return pattern[i] == '$'
 		}
 		if pattern[i] == '\\' && i+1 < n {
 			if pattern[i+1] == 'd' && !unicode.IsDigit(rune(line[j])) {
@@ -113,7 +110,7 @@ func matchPattern(line string, pattern string, pos int) bool {
 			}
 			i = endPos
 		} else {
-			if line[j] != pattern[i] {
+			if j < m && line[j] != pattern[i] {
 				return false
 			}
 		}
