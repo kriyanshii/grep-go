@@ -128,8 +128,9 @@ func matchPattern(line string, pattern string, pos int) bool {
 				j++
 			}
 			j--
-		} else if pattern[i] == '?' {
+		} else if pattern[i] == '.' {
 			j++
+			continue
 		} else {
 			if j < m && line[j] != pattern[i] {
 				return false
