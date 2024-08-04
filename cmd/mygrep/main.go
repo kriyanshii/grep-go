@@ -87,6 +87,16 @@ func matchPattern(line string, pattern string, pos int) bool {
 		if j >= m {
 			return pattern[i] == '$'
 		}
+		if i+1 < n && pattern[i+1] == '?' {
+			if line[j] == pattern[i] {
+				// Try matching with the character
+				if matchPattern(line, pattern[i+2:], j+1) {
+					return true
+				}
+			}
+			// Try matching without the character
+			return matchPattern(line, pattern[i+2:], j)
+		}
 		if pattern[i] == '\\' && i+1 < n {
 			if pattern[i+1] == 'd' && !unicode.IsDigit(rune(line[j])) {
 				return false
@@ -118,6 +128,8 @@ func matchPattern(line string, pattern string, pos int) bool {
 				j++
 			}
 			j--
+		} else if pattern[i] == '?' {
+			j++
 		} else {
 			if j < m && line[j] != pattern[i] {
 				return false
