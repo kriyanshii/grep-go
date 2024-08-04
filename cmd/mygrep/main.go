@@ -105,6 +105,18 @@ func matchPattern(line string, pattern string, pos int) bool {
 			} else {
 				i++
 			}
+		} else if pattern[i] == '(' {
+			endPos := strings.Index(pattern[i:], ")")
+			subPattern := pattern[i+1 : endPos]
+			if strings.Contains(subPattern, "|") {
+				subPatterns := strings.Split(subPattern, "|")
+				for _, subPattern := range subPatterns {
+					if matchPattern(line, subPattern, j) {
+						return true
+					}
+				}
+				return false
+			}
 		} else if pattern[i] == '[' && i+1 < n && pattern[i+1] == '^' {
 			endPos := strings.Index(pattern[i:], "]")
 			matchThisPattern := pattern[i:endPos]
