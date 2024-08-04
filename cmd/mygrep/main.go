@@ -109,6 +109,15 @@ func matchPattern(line string, pattern string, pos int) bool {
 				return false
 			}
 			i = endPos
+		} else if pattern[i] == '+' {
+			if i == 0 {
+				fmt.Println("Invalid pattern")
+				return false
+			}
+			for j < m && line[j] == pattern[i-1] {
+				j++
+			}
+			j--
 		} else {
 			if j < m && line[j] != pattern[i] {
 				return false
